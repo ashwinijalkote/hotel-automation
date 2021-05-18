@@ -3,7 +3,7 @@
 This is standalone maven application.
 
 1. Application takes input from file (src/main/resources/inputFile.txt)
-2. Sensor input for each floor are executed concurrently
+2. Sensor input for different floors are executed concurrently and for same floor are executed sequentialy.
 
 Steps to run :
 1. mvn clean package
