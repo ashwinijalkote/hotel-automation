@@ -1,0 +1,15 @@
+Number  of floors: 10
+Main corridors per floor: 1
+Sub corridors per floor: 2
+Movement in Floor 1, Subcorridor 2
+No movement in Floor 1,Sub corridor 2 for a minute
+exit
+Movement in Floor 2, Subcorridor 1
+Movement in Floor 2, Subcorridor 2
+No movement in Floor 2,Sub corridor 1 for a minute
+Movement in Floor 6, Subcorridor 1
+Movement in Floor 2, Subcorridor 2
+No movement in Floor 2,Sub corridor 2 for a minute
+No movement in Floor 2,Sub corridor 2 for a minute
+No movement in Floor 6,Sub corridor 1 for a minute
+exit

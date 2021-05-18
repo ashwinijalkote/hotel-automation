@@ -1,0 +1,4 @@
+Number  of floors: 2
+Main corridors per floor: 1
+Sub corridors per floor: 2
+exit
