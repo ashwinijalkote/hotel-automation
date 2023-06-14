@@ -1,7 +1,6 @@
 package com.hotel.automation.controller;
 
 import com.hotel.automation.app.HotelAutomationApp;
-import com.hotel.automation.consumer.MotionSensorInputConsumer;
 import com.hotel.automation.entity.Hotel;
 import com.hotel.automation.exception.InvalidInputException;
 import com.hotel.automation.inputs.InitialHotelStateInput;
@@ -16,7 +15,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -34,7 +32,14 @@ public class HotelAutomationController {
         LinkedBlockingQueue<Input> motionSensorInputQueue = new LinkedBlockingQueue<>();
 
         getMotionSensorInputs(stringLineParser, motionSensorInputQueue);
-        processMotionSensorInputs(hotel, motionSensorInputQueue);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        logger.info("Starting consumer thread");
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                processMotionSensorInputs(hotel, motionSensorInputQueue);
+            }
+        });
     }
 
     private Hotel getHotelInitialState(StringLineParser stringLineParser) {
@@ -65,8 +70,7 @@ public class HotelAutomationController {
     public void processMotionSensorInputs(Hotel hotel, LinkedBlockingQueue<Input> motionSensorInputQueue) {
 
         MotionSensorInputProcessor motionSensorInputProcessor = new MotionSensorInputProcessor(hotel);
-        LinkedHashMap<Integer, ExecutorService> floorToExecutorServiceMap = new LinkedHashMap<>();
-
+        ExecutorService executor = Executors.newFixedThreadPool(hotel.getFloors().size());
         while (true) {
             if (!motionSensorInputQueue.isEmpty()) {
                 Input input = null;
@@ -76,24 +80,18 @@ public class HotelAutomationController {
 
                 }
                 if (input instanceof NullInput) {
-                    shutdownThreads(floorToExecutorServiceMap);
+                    executor.shutdown();
                     return; //exit condition
                 }
-                int floorNumber = ((MotionSensorInput) input).getFloorNumber();
-                if (!floorToExecutorServiceMap.containsKey(floorNumber)) {
-                    ExecutorService exService = Executors.newSingleThreadExecutor();
-                    floorToExecutorServiceMap.put(floorNumber, exService);
-                }
-                floorToExecutorServiceMap.get(floorNumber).submit(new MotionSensorInputConsumer((MotionSensorInput) input,
-                        motionSensorInputProcessor));
+                Input finalInput = input;
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        motionSensorInputProcessor.process((MotionSensorInput) finalInput);
+                    }
+                });
             }
         }
-    }
-
-    private static void shutdownThreads(LinkedHashMap<Integer, ExecutorService> floorToExecutorServiceMap) {
-        floorToExecutorServiceMap.forEach((floorNumber, executorService) -> {
-            executorService.shutdown();
-        });
     }
 
 }
