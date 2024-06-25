@@ -13,6 +13,7 @@ import com.hotel.automation.processor.criteria.Criteria;
 import com.hotel.automation.processor.criteria.PowerConsumptionCriteria;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -22,7 +23,8 @@ public class MotionSensorInputProcessor {
     private Hotel hotel;
     private Command command;
     private Criteria criteria;
-    private LinkedHashMap<SubCorridor, SubCorridor> prevSubCorMap = new LinkedHashMap<>();
+    private HashMap<SubCorridor, SubCorridor> prevSubCorMap = new
+            HashMap<>();
 
     public MotionSensorInputProcessor(Hotel hotel) {
         this.hotel = hotel;

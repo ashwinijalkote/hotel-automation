@@ -3,23 +3,24 @@ package com.hotel.automation.entity;
 import com.hotel.automation.app.HotelAutomationApp;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Floor {
     static final Logger logger = Logger.getLogger(HotelAutomationApp.class);
 
-    private LinkedHashMap<Integer, MainCorridor> mainCorridors;
-    private LinkedHashMap<Integer, SubCorridor> subCorridors;
-
-    private Floor(LinkedHashMap<Integer, MainCorridor> mainCorridors, LinkedHashMap<Integer, SubCorridor> subCorridors) {
+    private HashMap<Integer, MainCorridor> mainCorridors;
+    private Floor(HashMap<Integer, MainCorridor> mainCorridors, HashMap<Integer, SubCorridor> subCorridors) {
         this.mainCorridors = mainCorridors;
         this.subCorridors = subCorridors;
     }
 
+    private HashMap<Integer, SubCorridor> subCorridors;
+
     public static class Builder {
-        LinkedHashMap<Integer, MainCorridor> mainCorridors = new LinkedHashMap<>();
-        LinkedHashMap<Integer, SubCorridor> subCorridors= new LinkedHashMap<>();
+        HashMap<Integer, MainCorridor> mainCorridors = new HashMap<>();
+        HashMap<Integer, SubCorridor> subCorridors= new HashMap<>();
 
         public Builder addMainCorridors(int numMainCorridors) {
             for( int i=0; i< numMainCorridors; i++) {
@@ -53,11 +54,11 @@ public class Floor {
         return powerConsumption.intValue();
     }
 
-    public LinkedHashMap<Integer, MainCorridor> getMainCorridors() {
+    public HashMap<Integer, MainCorridor> getMainCorridors() {
         return mainCorridors;
     }
 
-    public LinkedHashMap<Integer, SubCorridor> getSubCorridors() {
+    public HashMap<Integer, SubCorridor> getSubCorridors() {
         return subCorridors;
     }
 
